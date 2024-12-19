@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RentMyCar</string>
+    <string name="error_too_many_requests">Oeps, het lijkt erop dat je over de quota bent gegaan.</string>
+    <string name="error_no_internet">Kon geen verbinding maken met de server, controleer je internetverbinding.</string>
+    <string name="error_unknown">Er ging iets mis. Probeer het later nog eens.</string>
+    <string name="error_serialization">Kan de data niet serialiseren.</string>
+    <string name="error_request_timeout">Er is een time-out opgetreden.</string>
+</resources>
