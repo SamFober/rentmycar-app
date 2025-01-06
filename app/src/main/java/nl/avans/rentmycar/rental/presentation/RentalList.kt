@@ -1,6 +1,7 @@
 package nl.avans.rentmycar.rental.presentation
 
 import nl.avans.rentmycar.R
+import nl.avans.rentmycar.rental.domain.Rental
 
 val RentalList = listOf(
     Rental(

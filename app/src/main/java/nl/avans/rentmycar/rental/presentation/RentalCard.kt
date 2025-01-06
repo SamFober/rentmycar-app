@@ -16,7 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import nl.avans.rentmycar.R
+import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
 @Composable
 fun RentalCard(name: String, description: String, image: Int) {
@@ -56,4 +59,10 @@ fun RentalCard(name: String, description: String, image: Int) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun RentalCardPreview() {
+    RentMyCarTheme { RentalCard(name = "Ford Ka", description = "Mooi koekblik", image = R.drawable.logo) }
 }

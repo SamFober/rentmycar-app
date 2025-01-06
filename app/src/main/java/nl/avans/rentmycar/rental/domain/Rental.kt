@@ -1,4 +1,4 @@
-package nl.avans.rentmycar.rental.presentation
+package nl.avans.rentmycar.rental.domain
 
 data class Rental (
     val id: Int,
