@@ -5,8 +5,8 @@ import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.ensureActive
 import kotlinx.serialization.SerializationException
 import nl.avans.rentmycar.core.domain.util.NetworkError
-import kotlin.coroutines.coroutineContext
 import nl.avans.rentmycar.core.domain.util.Result
+import kotlin.coroutines.coroutineContext
 
 suspend inline fun <reified T> safeCall(
     execute: () -> HttpResponse
