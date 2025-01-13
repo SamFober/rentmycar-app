@@ -23,13 +23,13 @@ fun PasswordTextField(
             onTextChanged(it)
         },
         modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
         label = {
             Text(text = stringResource(R.string.password_field))
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password
         ),
-        visualTransformation = PasswordVisualTransformation(),
-        maxLines = 1
+        visualTransformation = PasswordVisualTransformation()
     )
 }
