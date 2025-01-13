@@ -6,4 +6,8 @@
     <string name="error_unknown">Er ging iets mis. Probeer het later nog eens.</string>
     <string name="error_serialization">Kan de data niet serialiseren.</string>
     <string name="error_request_timeout">Er is een time-out opgetreden.</string>
+    <string name="error_invalid_credentials">Email/wachtwoord onjuist</string>
+    <string name="email_field">Email</string>
+    <string name="password_field">Wachtwoord</string>
+    <string name="login">Log in</string>
 </resources>
