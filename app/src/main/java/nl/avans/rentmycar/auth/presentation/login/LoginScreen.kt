@@ -21,7 +21,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -47,20 +46,12 @@ import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LoginScreen(
-    modifier: Modifier = Modifier,
+fun LoginScreenRoute(
     viewModel: LoginViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val focusRequester = remember {
-        FocusRequester()
-    }
-
-    val focusManager = LocalFocusManager.current
-
     val context = LocalContext.current
-
 
     ObserveAsEvents(events = viewModel.loginEvents) { event ->
         when (event) {
@@ -81,6 +72,38 @@ fun LoginScreen(
             }
         }
     }
+
+    LoginScreen(
+        loginUiState = state,
+        onEmailTextChange = {
+            viewModel.updateEmail(it)
+        },
+        onPasswordTextChange = {
+            viewModel.updatePassword(it)
+        },
+        onSubmitButtonClicked = {
+            viewModel.submit()
+        },
+        onPasswordVisibilityChange = {
+            viewModel.updatePasswordVisibility(it)
+        }
+    )
+}
+
+@Composable
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    loginUiState: LoginUiState,
+    onEmailTextChange: (String) -> Unit,
+    onPasswordTextChange: (String) -> Unit,
+    onPasswordVisibilityChange: (Boolean) -> Unit,
+    onSubmitButtonClicked: () -> Unit,
+) {
+    val focusRequester = remember {
+        FocusRequester()
+    }
+
+    val focusManager = LocalFocusManager.current
 
     val contentColor = if (isSystemInDarkTheme()) {
         Color.White
@@ -103,9 +126,10 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.height(80.dp))
         TextField(
-            value = state.emailAddress,
+            value = loginUiState.emailAddress,
+            enabled = !loginUiState.isLoading,
             onValueChange = {
-                viewModel.onAction(LoginAction.EmailChanged(it))
+                onEmailTextChange(it)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -125,15 +149,23 @@ fun LoginScreen(
             )
         )
         Spacer(modifier = Modifier.height(20.dp))
-        PasswordTextField(state.password, onTextChanged = {
-            viewModel.onAction(LoginAction.PasswordChanged(it))
-        })
+        PasswordTextField(
+            value = loginUiState.password,
+            visible = loginUiState.passwordVisible,
+            onTextChanged = {
+                onPasswordTextChange(it)
+            },
+            onPasswordVisibilityChanged = {
+                onPasswordVisibilityChange(it)
+            },
+            enabled = !loginUiState.isLoading
+        )
         Spacer(modifier = Modifier.height(20.dp))
-        if (state.isLoading) {
+        if (loginUiState.isLoading) {
             CircularProgressIndicator()
         } else {
             Button(
-                onClick = { viewModel.onAction(LoginAction.Submit) }
+                onClick = { onSubmitButtonClicked() }
             ) {
                 Text(stringResource(R.string.login))
             }
@@ -148,7 +180,15 @@ private fun LoginScreenPreview() {
         LoginScreen(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background),
-            viewModel = LoginViewModel()
+            loginUiState = LoginUiState(
+                isLoading = false,
+                emailAddress = "",
+                password = "",
+            ),
+            onEmailTextChange = {},
+            onPasswordTextChange = {},
+            onSubmitButtonClicked = {},
+            onPasswordVisibilityChange = {}
         )
     }
 }
