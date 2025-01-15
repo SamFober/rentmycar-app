@@ -21,7 +21,7 @@ import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
 
 @Composable
-fun CarDetailsScreen(carId: Int, name: String, description: String, image: Int) {
+fun CarDetailsScreen(carId: Int, name: String = "Ford Ka", description: String = "Koekblik", image: Int = R.drawable.logo) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -29,7 +29,7 @@ fun CarDetailsScreen(carId: Int, name: String, description: String, image: Int) 
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Car Details",
+            text = "Auto Details",
             style = MaterialTheme.typography.headlineMedium
         )
         Spacer(
@@ -59,7 +59,8 @@ fun CarDetailsScreen(carId: Int, name: String, description: String, image: Int) 
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Beschrijving: $description"
+                text = "Beschrijving: $description",
+                style = MaterialTheme.typography.bodyLarge
             )
         }
     }
@@ -68,5 +69,12 @@ fun CarDetailsScreen(carId: Int, name: String, description: String, image: Int) 
 @Preview
 @Composable
 private fun CarDetailsScreenPreview() {
-    RentMyCarTheme { CarDetailsScreen(carId = 1, name = "Ford Ka", description = "Mooi koekblik", image = R.drawable.logo) }
+    RentMyCarTheme {
+        CarDetailsScreen(
+            carId = 1,
+            name = "Ford Ka",
+            description = "Mooi koekblik",
+            image = R.drawable.logo
+        )
+    }
 }

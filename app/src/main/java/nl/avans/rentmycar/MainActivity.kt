@@ -8,8 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import nl.avans.rentmycar.rental.presentation.AllRentals
+import nl.avans.rentmycar.rental.presentation.CarDetailsScreen
+import nl.avans.rentmycar.rental.presentation.DetailScreen
 import nl.avans.rentmycar.rental.presentation.RentalList
+import nl.avans.rentmycar.rental.presentation.StartScreen
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,11 +25,26 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RentMyCarTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = StartScreen
                 ) {
-                    AllRentals(RentalList)
+                    composable<StartScreen> {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
+                        ) {
+                            AllRentals(RentalList, onDetailButtonPressed = {
+                                navController.navigate(DetailScreen(it))
+                            })
+                        }
+                    }
+                    composable<DetailScreen> {
+                        val args = it.toRoute<DetailScreen>()
+                        CarDetailsScreen(args.carId)
+                    }
+
                 }
             }
         }
