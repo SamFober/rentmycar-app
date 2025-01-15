@@ -32,7 +32,7 @@ fun PasswordTextField(
     modifier: Modifier = Modifier
 ) {
 
-    val icon = if(visible)
+    val icon = if (visible)
         painterResource(R.drawable.visibility_24px)
     else
         painterResource(R.drawable.visibility_off_24px)
