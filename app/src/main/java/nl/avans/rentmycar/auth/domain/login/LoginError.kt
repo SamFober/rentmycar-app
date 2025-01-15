@@ -1,4 +1,4 @@
-package nl.avans.rentmycar.auth.domain
+package nl.avans.rentmycar.auth.domain.login
 
 import nl.avans.rentmycar.core.domain.util.Error
 
