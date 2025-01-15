@@ -3,6 +3,7 @@ package nl.avans.rentmycar.auth.presentation.login
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,7 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nl.avans.rentmycar.R
+import nl.avans.rentmycar.auth.domain.login.LoginError
 import nl.avans.rentmycar.auth.presentation.components.PasswordTextField
+import nl.avans.rentmycar.core.domain.util.NetworkError
 import nl.avans.rentmycar.core.presentation.util.ObserveAsEvents
 import nl.avans.rentmycar.core.presentation.util.toString
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
@@ -55,12 +58,20 @@ fun LoginScreenRoute(
 
     ObserveAsEvents(events = viewModel.loginEvents) { event ->
         when (event) {
-            is LoginEvent.Error -> {
-                Toast.makeText(
-                    context,
-                    event.error.toString(context),
-                    Toast.LENGTH_LONG
-                ).show()
+            is LoginEvent.Failed -> {
+                if (event.error is LoginError) {
+                    Toast.makeText(
+                        context,
+                        event.error.toString(context = context),
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else if (event.error is NetworkError) {
+                    Toast.makeText(
+                        context,
+                        event.error.toString(context = context),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
 
             is LoginEvent.Success -> {
@@ -74,7 +85,7 @@ fun LoginScreenRoute(
     }
 
     LoginScreen(
-        loginUiState = state,
+        uiState = state,
         onEmailTextChange = {
             viewModel.updateEmail(it)
         },
@@ -93,7 +104,7 @@ fun LoginScreenRoute(
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    loginUiState: LoginUiState,
+    uiState: LoginUiState,
     onEmailTextChange: (String) -> Unit,
     onPasswordTextChange: (String) -> Unit,
     onPasswordVisibilityChange: (Boolean) -> Unit,
@@ -112,10 +123,11 @@ fun LoginScreen(
     }
     Column(
         modifier = modifier
+            .padding(10.dp)
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(R.string.login),
@@ -124,10 +136,10 @@ fun LoginScreen(
             textAlign = TextAlign.Center,
             color = contentColor
         )
-        Spacer(modifier = Modifier.height(80.dp))
+        Spacer(modifier = Modifier.height(50.dp))
         TextField(
-            value = loginUiState.emailAddress,
-            enabled = !loginUiState.isLoading,
+            value = uiState.emailAddress,
+            enabled = !uiState.isLoading,
             onValueChange = {
                 onEmailTextChange(it)
             },
@@ -150,18 +162,18 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.height(20.dp))
         PasswordTextField(
-            value = loginUiState.password,
-            visible = loginUiState.passwordVisible,
+            value = uiState.password,
+            visible = uiState.passwordVisible,
             onTextChanged = {
                 onPasswordTextChange(it)
             },
             onPasswordVisibilityChanged = {
                 onPasswordVisibilityChange(it)
             },
-            enabled = !loginUiState.isLoading
+            enabled = !uiState.isLoading
         )
         Spacer(modifier = Modifier.height(20.dp))
-        if (loginUiState.isLoading) {
+        if (uiState.isLoading) {
             CircularProgressIndicator()
         } else {
             Button(
@@ -180,11 +192,7 @@ private fun LoginScreenPreview() {
         LoginScreen(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background),
-            loginUiState = LoginUiState(
-                isLoading = false,
-                emailAddress = "",
-                password = "",
-            ),
+            uiState = LoginUiState(),
             onEmailTextChange = {},
             onPasswordTextChange = {},
             onSubmitButtonClicked = {},
