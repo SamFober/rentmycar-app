@@ -10,34 +10,36 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import nl.avans.rentmycar.auth.domain.LoginError
 
-class LoginViewModel : ViewModel() {
-    private val _state = MutableStateFlow(LoginState())
+class LoginViewModel() : ViewModel() {
+    private val _state = MutableStateFlow(LoginUiState())
     val state = _state
 
     private val _loginEventsChannel = Channel<LoginEvent>()
     val loginEvents = _loginEventsChannel.receiveAsFlow()
 
-    fun onAction(action: LoginAction) {
-        when (action) {
-            is LoginAction.EmailChanged -> {
-                _state.update {
-                    it.copy(emailAddress = action.email)
-                }
-            }
-
-            is LoginAction.PasswordChanged -> {
-                _state.update {
-                    it.copy(password = action.password)
-                }
-            }
-
-            is LoginAction.Submit -> {
-                submitCredentials()
-            }
+    fun updateEmail(email: String) {
+        _state.update {
+            it.copy(emailAddress = email)
         }
     }
 
-    private fun submitCredentials() {
+    fun updatePassword(password: String) {
+        _state.update {
+            it.copy(password = password)
+        }
+    }
+
+    fun updatePasswordVisibility(visible: Boolean) {
+        _state.update {
+            it.copy(passwordVisible = visible)
+        }
+    }
+
+    fun submit() {
+        login()
+    }
+
+    private fun login() {
         viewModelScope.launch {
             _state.update {
                 it.copy(isLoading = true)
@@ -46,6 +48,8 @@ class LoginViewModel : ViewModel() {
             val password = _state.value.password
 
             delay(2000)
+
+            //TODO: Verify credentials on backend
 
             if (email == "test@gmail.com" && password == "password") {
                 _state.update { it.copy(isLoading = false) }
