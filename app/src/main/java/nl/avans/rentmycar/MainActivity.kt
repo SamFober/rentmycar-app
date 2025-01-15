@@ -12,7 +12,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.serialization.Serializable
-import nl.avans.rentmycar.auth.presentation.login.LoginScreen
 import nl.avans.rentmycar.auth.presentation.login.LoginScreenRoute
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
