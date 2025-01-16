@@ -37,22 +37,43 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.datetime.LocalDate
 import nl.avans.rentmycar.R
 import nl.avans.rentmycar.auth.presentation.components.PasswordTextField
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RegisterScreenRoute() {
+fun RegisterScreenRoute(
+    viewModel: RegisterViewModel = koinViewModel()
+) {
+    val loginUiState by viewModel.state.collectAsStateWithLifecycle()
+
     RegisterScreen(
-        RegisterUiState(),
-        onFirstNameTextChanged = {},
-        onLastNameTextChanged = {},
-        onDateOfBirthChanged = {},
-        onEmailTextChanged = {},
-        onPasswordTextChanged = {},
-        onPasswordVisibilityChanged = {},
-        onRegisterButtonClicked = {}
+        loginUiState,
+        onFirstNameTextChanged = {
+            viewModel.updateFirstName(it)
+        },
+        onLastNameTextChanged = {
+            viewModel.updateLastName(it)
+        },
+        onDateOfBirthChanged = {
+            viewModel.updateDateOfBirth(it)
+        },
+        onEmailTextChanged = {
+            viewModel.updateEmailAddress(it)
+        },
+        onPasswordTextChanged = {
+            viewModel.updatePassword(it)
+        },
+        onPasswordVisibilityChanged = {
+            viewModel.updatePasswordVisibility(it)
+        },
+        onRegisterButtonClicked = {
+            viewModel.register()
+        }
     )
 }
 
@@ -192,7 +213,6 @@ fun RegisterScreen(
     }
 }
 
-@Preview
 @Composable
 fun RegisterScreenPreview() {
     RentMyCarTheme {
