@@ -190,7 +190,7 @@ fun LoginScreen(
             Spacer(modifier.height(10.dp))
             TextButton(
                 onClick = { onRegisterButtonClicked() }
-            ) { Text(text = "No account? Register here.") }
+            ) { Text(text = stringResource(R.string.prompt_register)) }
         }
     }
 }
