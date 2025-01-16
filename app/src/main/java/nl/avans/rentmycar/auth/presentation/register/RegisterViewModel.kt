@@ -57,6 +57,12 @@ class RegisterViewModel(
         }
     }
 
+    fun updateIsRegistrationSuccessful(isSuccessful: Boolean) {
+        _state.update {
+            it.copy(registrationSuccessful = isSuccessful)
+        }
+    }
+
     fun register() {
         viewModelScope.launch {
             _state.update {

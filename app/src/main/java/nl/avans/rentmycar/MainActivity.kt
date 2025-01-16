@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<RegisterScreen> {
                         RegisterScreenRoute(
-                            onAccountRegistered = {
+                            onLoginButtonClicked = {
                                 navController.popBackStack(LoginScreen, inclusive = false)
                             }
                         )

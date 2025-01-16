@@ -14,4 +14,6 @@
     <string name="prompt_register">Geen account? Registreren</string>
     <string name="first_name_field">Voornaam</string>
     <string name="last_name_field">Achternaam</string>
+    <string name="register">Registreren</string>
+    <string name="account_created">Account is succesvol aangemaakt!\n Je kan nu inloggen</string>
 </resources>

@@ -6,6 +6,7 @@ import io.ktor.client.engine.cio.CIO
 import nl.avans.rentmycar.auth.data.networking.RemoteAuthDataSource
 import nl.avans.rentmycar.auth.domain.AuthDataSource
 import nl.avans.rentmycar.auth.presentation.login.LoginViewModel
+import nl.avans.rentmycar.auth.presentation.register.RegisterViewModel
 import nl.avans.rentmycar.core.data.networking.HttpClientFactory
 import nl.avans.rentmycar.core.domain.UserPreferencesSerializer
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -21,6 +22,7 @@ val Context.userPreferenceDatastore by dataStore(
 val appModule = module {
     single { HttpClientFactory.create(CIO.create()) }
     viewModelOf(::LoginViewModel)
+    viewModelOf(::RegisterViewModel)
     singleOf(::RemoteAuthDataSource).bind<AuthDataSource>()
     single { provideDataStore(get()) }
 }

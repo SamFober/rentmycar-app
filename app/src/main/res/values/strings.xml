@@ -13,4 +13,6 @@
     <string name="prompt_register">No account? Register</string>
     <string name="first_name_field">First name</string>
     <string name="last_name_field">Last name</string>
+    <string name="register">Register</string>
+    <string name="account_created">Account created successfully!\nYou can now sign in.</string>
 </resources>
