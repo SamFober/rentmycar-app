@@ -29,7 +29,7 @@ fun RentalCard(
     description: String,
     image: Int,
     carId: Int,
-    onDetailButtonPressed: (Int) -> Unit
+    onDetailButtonPressed: (carId: Int, name: String, description: String, imgRes: Int) -> Unit
 ) {
     val navController = rememberNavController()
     Card(
@@ -67,7 +67,7 @@ fun RentalCard(
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Button(onClick = {
-                    onDetailButtonPressed(carId)
+                    onDetailButtonPressed(carId, name, description, image)
                 }
                 ) {
                     Text(text = "Details")
@@ -86,7 +86,7 @@ private fun RentalCardPreview() {
             description = "Mooi koekblik",
             image = R.drawable.logo,
             carId = 1,
-            onDetailButtonPressed = {}
+            onDetailButtonPressed = { carId, name, description, imgRes ->  }
         )
     }
 }

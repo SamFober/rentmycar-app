@@ -23,7 +23,7 @@ import nl.avans.rentmycar.rental.domain.Rental
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AllRentals(platlist: List<Rental>, onDetailButtonPressed: (Int) -> Unit) {
+fun AllRentals(platlist: List<Rental>, onDetailButtonPressed: (carId: Int, name: String, description: String, imgRes: Int) -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -61,11 +61,3 @@ fun AllRentals(platlist: List<Rental>, onDetailButtonPressed: (Int) -> Unit) {
         }
     }
 }
-
-@Serializable
-object StartScreen
-
-@Serializable
-data class DetailScreen(
-    val carId: Int
-)

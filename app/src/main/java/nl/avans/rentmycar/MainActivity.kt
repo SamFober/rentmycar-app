@@ -12,11 +12,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import kotlinx.serialization.Serializable
 import nl.avans.rentmycar.rental.presentation.AllRentals
 import nl.avans.rentmycar.rental.presentation.CarDetailsScreen
-import nl.avans.rentmycar.rental.presentation.DetailScreen
 import nl.avans.rentmycar.rental.presentation.RentalList
-import nl.avans.rentmycar.rental.presentation.StartScreen
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
 class MainActivity : ComponentActivity() {
@@ -35,14 +34,24 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-                            AllRentals(RentalList, onDetailButtonPressed = {
-                                navController.navigate(DetailScreen(it))
+                            AllRentals(RentalList, onDetailButtonPressed = {carId, name, description, imgRes ->
+                                navController.navigate(DetailScreen(
+                                    carId = carId,
+                                    name = name,
+                                    description = description,
+                                    picture = imgRes
+                                ))
                             })
                         }
                     }
                     composable<DetailScreen> {
                         val args = it.toRoute<DetailScreen>()
-                        CarDetailsScreen(args.carId)
+                        CarDetailsScreen(
+                            carId = args.carId,
+                            name = args.name,
+                            description = args.description,
+                            image = args.picture
+                        )
                     }
 
                 }
@@ -50,3 +59,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+@Serializable
+object StartScreen
+
+@Serializable
+data class DetailScreen(
+    val carId: Int,
+    val name: String,
+    val description: String,
+    val picture: Int
+)

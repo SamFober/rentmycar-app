@@ -21,7 +21,7 @@ import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
 
 @Composable
-fun CarDetailsScreen(carId: Int, name: String = "Ford Ka", description: String = "Koekblik", image: Int = R.drawable.logo) {
+fun CarDetailsScreen(carId: Int, name: String, description: String, image: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
