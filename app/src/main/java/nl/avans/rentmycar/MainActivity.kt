@@ -29,7 +29,11 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable<RegisterScreen> {
-                        RegisterScreenRoute()
+                        RegisterScreenRoute(
+                            onAccountRegistered = {
+                                navController.popBackStack(LoginScreen, inclusive = false)
+                            }
+                        )
                     }
                 }
             }
