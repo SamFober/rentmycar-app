@@ -24,7 +24,7 @@ import nl.avans.rentmycar.R
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
 @Composable
-fun RentalCard(
+fun MyCarCard(
     name: String,
     description: String,
     image: Int,
@@ -70,7 +70,7 @@ fun RentalCard(
                     onDetailButtonPressed(carId)
                 }
                 ) {
-                    Text(text = "Details")
+                    Text(text = "Edit")
                 }
             }
         }
@@ -81,7 +81,7 @@ fun RentalCard(
 @Composable
 private fun RentalCardPreview() {
     RentMyCarTheme {
-        RentalCard(
+        MyCarCard(
             name = "Ford Ka",
             description = "Mooi koekblik",
             image = R.drawable.logo,

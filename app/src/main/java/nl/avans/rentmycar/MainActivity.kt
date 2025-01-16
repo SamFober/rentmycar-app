@@ -12,8 +12,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import nl.avans.rentmycar.rental.presentation.AddCar
 import nl.avans.rentmycar.rental.presentation.AllRentals
-import nl.avans.rentmycar.rental.presentation.CarDetailsScreen
+import nl.avans.rentmycar.rental.presentation.MyCarDetailsScreen
 import nl.avans.rentmycar.rental.presentation.DetailScreen
 import nl.avans.rentmycar.rental.presentation.RentalList
 import nl.avans.rentmycar.rental.presentation.StartScreen
@@ -35,16 +36,24 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-                            AllRentals(RentalList, onDetailButtonPressed = {
-                                navController.navigate(DetailScreen(it))
-                            })
+                            AllRentals(
+                                RentalList,
+                                onDetailButtonPressed = {
+                                    navController.navigate(DetailScreen(it))
+                                },
+                                onAddCarButtonPressed = {
+                                    navController.navigate("add_car")
+                                }
+                            )
                         }
                     }
                     composable<DetailScreen> {
                         val args = it.toRoute<DetailScreen>()
-                        CarDetailsScreen(args.carId)
+                        MyCarDetailsScreen(args.carId)
                     }
-
+                    composable("add_car") {
+                        AddCar()
+                    }
                 }
             }
         }

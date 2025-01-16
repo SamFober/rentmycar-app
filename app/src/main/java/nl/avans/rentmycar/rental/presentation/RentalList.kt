@@ -15,5 +15,5 @@ val RentalList = listOf(
         name = "Dacia Duster",
         description = "Tank",
         imageRes = R.drawable.logo
-    )
+    ),
 )
