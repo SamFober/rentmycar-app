@@ -96,6 +96,7 @@ fun RentalScreen() {
             Spacer(
                 modifier = Modifier.height(20.dp)
             )
+            Text(text = "klik hier om de auto te huren:")
             Button(onClick = {
                 TODO("Koppelen aan de back-end, dankje Sam! xx <3")
             }
