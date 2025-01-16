@@ -16,6 +16,7 @@ import kotlinx.serialization.Serializable
 import nl.avans.rentmycar.rental.presentation.AllRentals
 import nl.avans.rentmycar.rental.presentation.CarDetailsScreen
 import nl.avans.rentmycar.rental.presentation.RentalList
+import nl.avans.rentmycar.rental.presentation.RentalScreen
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,10 +51,15 @@ class MainActivity : ComponentActivity() {
                             carId = args.carId,
                             name = args.name,
                             description = args.description,
-                            image = args.picture
+                            image = args.picture,
+                            onRentButtonClick = {
+                                navController.navigate(RentalScreen)
+                            }
                         )
                     }
-
+                    composable<RentalScreen> {
+                        RentalScreen()
+                    }
                 }
             }
         }
@@ -70,3 +76,6 @@ data class DetailScreen(
     val description: String,
     val picture: Int
 )
+
+@Serializable
+object RentalScreen

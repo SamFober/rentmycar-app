@@ -18,12 +18,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.serialization.Serializable
 import nl.avans.rentmycar.rental.domain.Rental
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AllRentals(platlist: List<Rental>, onDetailButtonPressed: (carId: Int, name: String, description: String, imgRes: Int) -> Unit) {
+fun AllRentals(platlist: List<Rental>,
+               onDetailButtonPressed: (carId: Int,
+                                       name: String,
+                                       description: String,
+                                       imgRes: Int) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(

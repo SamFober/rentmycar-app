@@ -13,6 +13,7 @@ navigationRuntimeKtx = "2.8.5"
 navigationCompose = "2.8.5"
 composeNavigation = "2.8.0-alpha08"
 serialization = "1.6.3"
+datetimeDialogs = "0.8.1-rc"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +39,7 @@ androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navig
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+datetime-dialogs = { group = "io.github.vanpra.compose-material-dialogs", name = "datetime", version.ref = "datetimeDialogs" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
