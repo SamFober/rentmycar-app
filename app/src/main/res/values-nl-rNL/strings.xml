@@ -11,4 +11,7 @@
     <string name="password_field">Wachtwoord</string>
     <string name="login">Log in</string>
     <string name="error_access_denied">Toegang geweigerd</string>
+    <string name="prompt_register">Geen account? Registreren</string>
+    <string name="first_name_field">Voornaam</string>
+    <string name="last_name_field">Achternaam</string>
 </resources>

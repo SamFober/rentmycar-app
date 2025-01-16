@@ -10,4 +10,7 @@
     <string name="password_field">Password</string>
     <string name="login">Sign in</string>
     <string name="error_access_denied">Access denied</string>
+    <string name="prompt_register">No account? Register</string>
+    <string name="first_name_field">First name</string>
+    <string name="last_name_field">Last name</string>
 </resources>
