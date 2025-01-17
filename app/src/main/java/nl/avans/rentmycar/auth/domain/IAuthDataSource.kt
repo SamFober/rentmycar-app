@@ -6,7 +6,7 @@ import nl.avans.rentmycar.core.domain.util.Error
 import nl.avans.rentmycar.core.domain.util.Result
 import java.util.UUID
 
-interface AuthDataSource {
+interface IAuthDataSource {
     suspend fun login(emailAddress: String, password: String): Result<UserSession, Error>
     suspend fun register(
         firstName: String,
