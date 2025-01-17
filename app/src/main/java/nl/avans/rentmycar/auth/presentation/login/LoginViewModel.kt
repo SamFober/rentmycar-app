@@ -7,15 +7,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import nl.avans.rentmycar.auth.domain.AuthDataSource
+import nl.avans.rentmycar.auth.domain.IAuthDataSource
+import nl.avans.rentmycar.auth.domain.ITokenManager
 import nl.avans.rentmycar.auth.domain.login.LoginError
-import nl.avans.rentmycar.core.data.networking.constructUrl
 import nl.avans.rentmycar.core.domain.util.NetworkError
 import nl.avans.rentmycar.core.domain.util.onError
 import nl.avans.rentmycar.core.domain.util.onSuccess
 
 class LoginViewModel(
-    private val authDataSource: AuthDataSource
+    private val authDataSource: IAuthDataSource,
+    private val tokenManager: ITokenManager
 ) : ViewModel() {
     private val _state = MutableStateFlow(LoginUiState())
     val state = _state
@@ -47,7 +48,7 @@ class LoginViewModel(
 
     private fun login() {
         viewModelScope.launch {
-            println(constructUrl("/auth/login"))
+            println(tokenManager.getRefreshToken())
             _state.update {
                 it.copy(isLoading = true)
             }
@@ -59,6 +60,10 @@ class LoginViewModel(
                     _state.update {
                         it.copy(isLoading = false)
                     }
+                    tokenManager.setTokens(
+                        accessToken = session.accessToken,
+                        refreshToken = session.refreshToken
+                    )
                     _loginEventsChannel.send(LoginEvent.Success)
                 }
                 .onError { error ->
