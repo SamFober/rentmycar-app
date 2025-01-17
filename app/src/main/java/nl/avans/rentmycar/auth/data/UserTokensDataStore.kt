@@ -1,4 +1,4 @@
-package nl.avans.rentmycar.core.domain
+package nl.avans.rentmycar.auth.data
 
 import androidx.datastore.core.Serializer
 import kotlinx.coroutines.Dispatchers
