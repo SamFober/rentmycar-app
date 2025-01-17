@@ -1,4 +1,4 @@
-package nl.avans.rentmycar.auth.data.networking.dto
+package nl.avans.rentmycar.auth.data.networking.dto.login
 
 import kotlinx.serialization.Serializable
 
