@@ -10,7 +10,7 @@ import nl.avans.rentmycar.auth.domain.TokenManager
 import nl.avans.rentmycar.auth.presentation.login.LoginViewModel
 import nl.avans.rentmycar.auth.presentation.register.RegisterViewModel
 import nl.avans.rentmycar.core.data.networking.HttpClientFactory
-import nl.avans.rentmycar.core.domain.UserPreferencesSerializer
+import nl.avans.rentmycar.auth.data.UserPreferencesSerializer
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind

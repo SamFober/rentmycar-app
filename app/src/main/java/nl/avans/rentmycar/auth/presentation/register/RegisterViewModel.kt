@@ -8,12 +8,12 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import nl.avans.rentmycar.auth.domain.AuthDataSource
+import nl.avans.rentmycar.auth.domain.IAuthDataSource
 import nl.avans.rentmycar.core.domain.util.onError
 import nl.avans.rentmycar.core.domain.util.onSuccess
 
 class RegisterViewModel(
-    private val authDataSource: AuthDataSource
+    private val authDataSource: IAuthDataSource
 ) : ViewModel() {
     private val _state = MutableStateFlow(RegisterUiState())
     val state = _state
