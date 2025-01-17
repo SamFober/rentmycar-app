@@ -1,5 +1,6 @@
 package nl.avans.rentmycar.rental.presentation
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,7 +22,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.TextFieldValue
 import nl.avans.rentmycar.R
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Log
+import androidx.camera.core.*
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
+import androidx.compose.material3.*
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import java.io.File
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,14 +51,16 @@ fun AddCar() {
             )
         }
     ) { paddingValues ->
-    var brand by remember { mutableStateOf(TextFieldValue("")) }
-    var model by remember { mutableStateOf(TextFieldValue("")) }
-    var location by remember { mutableStateOf(TextFieldValue("")) }
-    var price by remember { mutableStateOf(TextFieldValue("")) }
-    var type by remember { mutableStateOf("Regular Gas") }
-    var availability by remember { mutableStateOf(false) }
-    var expanded by remember { mutableStateOf(false) }
-    var selectedFuelType by remember { mutableStateOf("Select Fuel Type") }
+        val context = LocalContext.current
+        var brand by remember { mutableStateOf(TextFieldValue("")) }
+        var model by remember { mutableStateOf(TextFieldValue("")) }
+        var availability by remember { mutableStateOf(false) }
+        var location by remember { mutableStateOf(TextFieldValue("")) }
+        var price by remember { mutableStateOf(TextFieldValue("")) }
+        var carImage by remember { mutableStateOf<Bitmap?>(null) }
+        val lifecycleOwner = LocalContext.current as LifecycleOwner
+        val cameraExecutor: ExecutorService = remember { Executors.newSingleThreadExecutor() }
+        var imageCapture: ImageCapture? by remember { mutableStateOf(null) }
 
     Column(
         modifier = Modifier
@@ -116,6 +133,32 @@ fun AddCar() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
+            onClick = {
+                startCamera(
+                    lifecycleOwner = lifecycleOwner,
+                    onImageCapture = { uri ->
+                        carImage = BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri))
+                    },
+                    onError = { Log.e("CameraX", "Failed to capture image: ${it.message}") }
+                )
+            }
+        ) {
+            Text("Take Picture")
+        }
+
+        carImage?.let {
+            Image(
+                bitmap = it.asImageBitmap(),
+                contentDescription = "Car Image",
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(8.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
             onClick = { /* Handle submit action */ }
         ) {
             Text("Submit")
@@ -168,10 +211,10 @@ fun DropDownDemo() {
                     isDropDownExpanded.value = false
                 }
             ) {
-                fueltypes.forEachIndexed { index, username ->
+                fueltypes.forEachIndexed { index, fueltype ->
                     DropdownMenuItem(
                         text = {
-                            Text(text = username)
+                            Text(text = fueltype)
                         },
                         onClick = {
                             isDropDownExpanded.value = false
@@ -182,5 +225,50 @@ fun DropDownDemo() {
             }
         }
     }
+}
+
+fun startCamera(
+    lifecycleOwner: LifecycleOwner,
+    onImageCapture: (Uri) -> Unit,
+    onError: (Exception) -> Unit
+) {
+    val cameraProviderFuture = ProcessCameraProvider.getInstance(lifecycleOwner as android.content.Context)
+    cameraProviderFuture.addListener({
+        val cameraProvider = cameraProviderFuture.get()
+        val preview = Preview.Builder().build().also {
+            it.setSurfaceProvider(PreviewView(lifecycleOwner).surfaceProvider)
+        }
+
+        val imageCapture = ImageCapture.Builder().build()
+
+        try {
+            cameraProvider.unbindAll()
+            cameraProvider.bindToLifecycle(
+                lifecycleOwner,
+                CameraSelector.DEFAULT_BACK_CAMERA,
+                preview,
+                imageCapture
+            )
+
+            // Capture logic (for example, a button trigger to take a photo)
+            val photoFile = File(lifecycleOwner.filesDir, "photo.jpg")
+            val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+            imageCapture.takePicture(
+                outputOptions,
+                ContextCompat.getMainExecutor(lifecycleOwner as android.content.Context),
+                object : ImageCapture.OnImageSavedCallback {
+                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                        output.savedUri?.let(onImageCapture)
+                    }
+
+                    override fun onError(exception: ImageCaptureException) {
+                        onError(exception)
+                    }
+                }
+            )
+        } catch (exc: Exception) {
+            onError(exc)
+        }
+    }, ContextCompat.getMainExecutor(lifecycleOwner as android.content.Context))
 }
 
