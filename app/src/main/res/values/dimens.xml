@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="padding_horizontal">16dp</dimen>
+    <dimen name="padding_vertical">8dp</dimen>
+    <dimen name="spacer_height">16dp</dimen>
+    <dimen name="text_field_height">100dp</dimen>
+    <dimen name="button_spacing">24dp</dimen>
+</resources>
