@@ -2,9 +2,7 @@ package nl.avans.rentmycar.rental.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -53,14 +51,8 @@ fun CarDetailsScreen(
         ) {
             Text(
                 text = "Auto Details",
-                style = MaterialTheme.typography.headlineMedium
-            )
-            Spacer(
-                modifier = Modifier.height(20.dp)
-            )
-            Text(
-                text = "Details voor auto ID: $carId",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.primary
             )
             Image(
                 painter = painterResource(id = image),
@@ -73,7 +65,7 @@ fun CarDetailsScreen(
             Column(modifier = Modifier.padding(start = 8.dp)) {
                 Text(
                     text = name,
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(

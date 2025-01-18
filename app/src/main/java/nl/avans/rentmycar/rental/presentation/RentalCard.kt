@@ -29,7 +29,11 @@ fun RentalCard(
     description: String,
     image: Int,
     carId: Int,
-    onDetailButtonPressed: (carId: Int, name: String, description: String, imgRes: Int) -> Unit
+    onDetailButtonPressed: (
+        carId: Int,
+        name: String,
+        description: String,
+        imgRes: Int) -> Unit
 ) {
     val navController = rememberNavController()
     Card(
