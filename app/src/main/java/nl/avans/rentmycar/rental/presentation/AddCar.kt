@@ -1,6 +1,5 @@
 package nl.avans.rentmycar.rental.presentation
 
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -52,15 +51,12 @@ fun AddCar() {
         var location by remember { mutableStateOf(TextFieldValue("")) }
         var price by remember { mutableStateOf(TextFieldValue("")) }
 
-        // State for captured image
         var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
         var capturedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
 
-        // Context
         val context = LocalContext.current
 
 
-        // Helper function to get Bitmap from URI
         fun getBitmapFromUri(context: Context, uri: Uri): Bitmap? {
             return try {
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -72,19 +68,16 @@ fun AddCar() {
             }
         }
 
-        // Define the cameraLauncher to launch the camera intent
         val cameraLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.TakePicture()
         ) { isSuccess: Boolean ->
             if (isSuccess) {
                 capturedImageUri?.let {
-                    // Load the bitmap from the captured image URI
                     capturedImageBitmap = getBitmapFromUri(context, it)
                 }
             }
         }
 
-        // Function to create an image URI
         fun createImageUri(): Uri {
             val contentResolver = context.contentResolver
             val values = ContentValues().apply {
