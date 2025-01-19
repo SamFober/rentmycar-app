@@ -24,10 +24,11 @@ import nl.avans.rentmycar.rental.presentation.components.RentalCard
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AllRentals(platlist: List<Rental>,
-               onDetailButtonPressed: (carId: Int,
-                                       name: String,
-                                       description: String,
-                                       imgRes: Int) -> Unit
+               onDetailButtonPressed: (
+                   carId: Int,
+                   name: String,
+                   description: String,
+                   imgRes: Int) -> Unit
 ) {
     Scaffold(
         topBar = {

@@ -35,7 +35,8 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-                            AllRentals(RentalList, onDetailButtonPressed = {carId, name, description, imgRes ->
+                            AllRentals(RentalList,
+                                onDetailButtonPressed = {carId, name, description, imgRes ->
                                 navController.navigate(DetailScreen(
                                     carId = carId,
                                     name = name,

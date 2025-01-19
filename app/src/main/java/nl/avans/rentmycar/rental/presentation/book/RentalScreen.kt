@@ -1,6 +1,7 @@
 package nl.avans.rentmycar.rental.presentation.book
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -75,24 +76,34 @@ fun RentalScreen() {
         ) {
             Text(
                 text = "Auto huren",
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
             )
             Spacer(
                 modifier = Modifier.height(20.dp)
             )
-            Button(onClick = {
-                dateDialogState.show()
-            }) {
-                Text(text = "Kies een datum")
+            Row() {
+                Column(
+                    modifier = Modifier
+                        .padding(end = 32.dp)
+                ) {
+                    Button(onClick = {
+                        dateDialogState.show()
+                    }) {
+                        Text(text = "Kies een datum")
+                    }
+                    Text(text = formattedDate)
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Column {
+                    Button(onClick = {
+                        timeDialogState.show()
+                    }) {
+                        Text(text = "Kies een tijd")
+                    }
+                    Text(text = formattedTime)
+                }
             }
-            Text(text = formattedDate)
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = {
-                timeDialogState.show()
-            }) {
-                Text(text = "Kies een tijd")
-            }
-            Text(text = formattedTime)
             Spacer(
                 modifier = Modifier.height(20.dp)
             )
