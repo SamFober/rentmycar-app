@@ -1,5 +1,6 @@
 package nl.avans.rentmycar.rental.presentation
 
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -25,14 +26,17 @@ import nl.avans.rentmycar.R
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.material3.*
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import android.Manifest
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -61,6 +65,16 @@ fun AddCar() {
         val lifecycleOwner = LocalContext.current as LifecycleOwner
         val cameraExecutor: ExecutorService = remember { Executors.newSingleThreadExecutor() }
         var imageCapture: ImageCapture? by remember { mutableStateOf(null) }
+        val cameraPermission = Manifest.permission.CAMERA
+
+        val permissionLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if (isGranted) {
+            } else {
+                Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     Column(
         modifier = Modifier
@@ -134,13 +148,17 @@ fun AddCar() {
 
         Button(
             onClick = {
-                startCamera(
-                    lifecycleOwner = lifecycleOwner,
-                    onImageCapture = { uri ->
-                        carImage = BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri))
-                    },
-                    onError = { Log.e("CameraX", "Failed to capture image: ${it.message}") }
-                )
+                if (ContextCompat.checkSelfPermission(context, cameraPermission) == PackageManager.PERMISSION_GRANTED) {
+                    startCamera(
+                        lifecycleOwner = lifecycleOwner,
+                        onImageCapture = { uri ->
+                            carImage = BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri))
+                        },
+                        onError = { Log.e("CameraX", "Failed to capture image: ${it.message}") }
+                    )
+                } else {
+                    permissionLauncher.launch(cameraPermission)
+                }
             }
         ) {
             Text("Take Picture")
