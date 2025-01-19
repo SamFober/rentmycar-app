@@ -4,14 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.LaunchedEffect
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import kotlinx.serialization.Serializable
+import nl.avans.rentmycar.auth.domain.TokenManager
+import nl.avans.rentmycar.auth.presentation.login.LoginScreenRoute
+import nl.avans.rentmycar.auth.presentation.register.RegisterScreenRoute
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
+import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,29 +22,48 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RentMyCarTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                val navController = rememberNavController()
+                val tokenManager = koinInject<TokenManager>()
+                var startScreen: Any = MainScreen
+
+                LaunchedEffect(key1 = null) {
+                    if (tokenManager.getAccessToken().isEmpty()) {
+                        startScreen = LoginScreen
+                    }
+                }
+
+
+
+                NavHost(
+                    navController = navController,
+                    startDestination = startScreen
+                ) {
+                    composable<LoginScreen> {
+                        LoginScreenRoute(
+                            onRegisterButtonClicked = { navController.navigate(RegisterScreen) }
+                        )
+                    }
+                    composable<RegisterScreen> {
+                        RegisterScreenRoute(
+                            onLoginButtonClicked = {
+                                navController.popBackStack(LoginScreen, inclusive = false)
+                            }
+                        )
+                    }
+                    composable<MainScreen> {
+                        Text("MAIN SCREEN")
+                    }
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+@Serializable
+object LoginScreen
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RentMyCarTheme {
-        Greeting("Android")
-    }
-}
+@Serializable
+object RegisterScreen
+
+@Serializable
+object MainScreen
