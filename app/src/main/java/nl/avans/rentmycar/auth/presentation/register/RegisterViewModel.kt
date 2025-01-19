@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import nl.avans.rentmycar.auth.domain.IAuthDataSource
+import nl.avans.rentmycar.auth.data.IAuthDataSource
 import nl.avans.rentmycar.core.domain.util.onError
 import nl.avans.rentmycar.core.domain.util.onSuccess
 

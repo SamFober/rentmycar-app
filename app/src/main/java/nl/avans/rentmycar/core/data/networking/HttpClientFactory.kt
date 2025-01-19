@@ -49,7 +49,7 @@ object HttpClientFactory {
                         val token = client.get {
                             markAsRefreshTokenRequest()
                             url(constructUrl("/auth/refresh-token"))
-                            setBody(RefreshTokenRequest(refreshToken = ""))
+                            setBody(RefreshTokenRequest(refreshToken = tokenManager.getRefreshToken()))
                         }.body<RefreshTokenResponse>()
                         tokenManager.setTokens(
                             accessToken = token.accessToken,

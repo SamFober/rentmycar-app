@@ -52,7 +52,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun LoginScreenRoute(
     viewModel: LoginViewModel = koinViewModel(),
-    onRegisterButtonClicked: () -> Unit
+    onRegisterButtonClicked: () -> Unit,
+    onUserLoggedIn: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -77,11 +78,7 @@ fun LoginScreenRoute(
             }
 
             is LoginEvent.Success -> {
-                Toast.makeText(
-                    context,
-                    "Welkom!",
-                    Toast.LENGTH_LONG
-                ).show()
+                onUserLoggedIn()
             }
         }
     }

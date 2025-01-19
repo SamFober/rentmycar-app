@@ -1,4 +1,4 @@
-package nl.avans.rentmycar.auth.domain
+package nl.avans.rentmycar.auth.data
 
 import kotlinx.datetime.LocalDate
 import nl.avans.rentmycar.auth.domain.login.UserSession
