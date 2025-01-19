@@ -25,26 +25,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import nl.avans.rentmycar.R
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.camera.core.*
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
-import android.Manifest
 import android.content.ContentValues
 import android.content.Context
 import android.os.Environment
 import android.provider.MediaStore
-import java.io.File
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
