@@ -4,20 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
-import nl.avans.rentmycar.rental.presentation.AllRentals
+import nl.avans.rentmycar.DetailScreen
+import nl.avans.rentmycar.RentalScreen
+import nl.avans.rentmycar.auth.domain.TokenManager
+import nl.avans.rentmycar.auth.presentation.login.LoginScreenRoute
+import nl.avans.rentmycar.auth.presentation.register.RegisterScreenRoute
 import nl.avans.rentmycar.rental.presentation.CarDetailsScreen
-import nl.avans.rentmycar.rental.presentation.RentalList
 import nl.avans.rentmycar.rental.presentation.book.RentalScreen
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
+import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,25 +28,35 @@ class MainActivity : ComponentActivity() {
         setContent {
             RentMyCarTheme {
                 val navController = rememberNavController()
+                val tokenManager = koinInject<TokenManager>()
+                var startScreen: Any = MainScreen
+
+                LaunchedEffect(key1 = null) {
+                    if (tokenManager.getAccessToken().isEmpty()) {
+                        startScreen = LoginScreen
+                    }
+                }
+
+
+
                 NavHost(
                     navController = navController,
-                    startDestination = StartScreen
+                    startDestination = startScreen
                 ) {
-                    composable<StartScreen> {
-                        Surface(
-                            modifier = Modifier.fillMaxSize(),
-                            color = MaterialTheme.colorScheme.background
-                        ) {
-                            AllRentals(RentalList,
-                                onDetailButtonPressed = {carId, name, description, imgRes ->
-                                navController.navigate(DetailScreen(
-                                    carId = carId,
-                                    name = name,
-                                    description = description,
-                                    picture = imgRes
-                                ))
-                            })
-                        }
+                    composable<LoginScreen> {
+                        LoginScreenRoute(
+                            onRegisterButtonClicked = { navController.navigate(RegisterScreen) }
+                        )
+                    }
+                    composable<RegisterScreen> {
+                        RegisterScreenRoute(
+                            onLoginButtonClicked = {
+                                navController.popBackStack(LoginScreen, inclusive = false)
+                            }
+                        )
+                    }
+                    composable<MainScreen> {
+                        Text("MAIN SCREEN")
                     }
                     composable<DetailScreen> {
                         val args = it.toRoute<DetailScreen>()
@@ -66,6 +78,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+@Serializable
+object LoginScreen
+
+@Serializable
+object RegisterScreen
+
+@Serializable
+object MainScreen
 
 @Serializable
 object StartScreen
