@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
 import nl.avans.rentmycar.rental.presentation.AllRentals
 import nl.avans.rentmycar.rental.presentation.CarDetailsScreen
 import nl.avans.rentmycar.rental.presentation.RentalList
-import nl.avans.rentmycar.rental.presentation.RentalScreen
+import nl.avans.rentmycar.rental.presentation.book.RentalScreen
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
 class MainActivity : ComponentActivity() {

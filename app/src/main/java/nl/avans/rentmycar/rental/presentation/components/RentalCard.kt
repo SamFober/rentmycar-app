@@ -1,4 +1,4 @@
-package nl.avans.rentmycar.rental.presentation
+package nl.avans.rentmycar.rental.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

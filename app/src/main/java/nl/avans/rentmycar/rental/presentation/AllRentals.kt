@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import nl.avans.rentmycar.rental.domain.Rental
+import nl.avans.rentmycar.rental.presentation.components.RentalCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +61,13 @@ fun AllRentals(platlist: List<Rental>,
                 }
             }
             items(platlist) {
-                RentalCard(it.name, it.description, it.imageRes, it.id, onDetailButtonPressed = onDetailButtonPressed)
+                RentalCard(
+                    it.name,
+                    it.description,
+                    it.imageRes,
+                    it.id,
+                    onDetailButtonPressed = onDetailButtonPressed
+                )
             }
         }
     }
