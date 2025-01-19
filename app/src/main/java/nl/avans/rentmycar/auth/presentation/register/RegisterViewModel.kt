@@ -72,7 +72,7 @@ class RegisterViewModel(
             authDataSource.register(
                 firstName = _state.value.firstName,
                 lastName = _state.value.lastName,
-                dateOfBirth = _state.value.dateOfBirth,
+                dateOfBirth = LocalDate(1998, 11, 27),
                 emailAddress = _state.value.emailAddress,
                 password = _state.value.password
             ).onSuccess {

@@ -8,7 +8,6 @@ import nl.avans.rentmycar.auth.data.networking.dto.login.LoginRequest
 import nl.avans.rentmycar.auth.data.networking.dto.login.LoginResponse
 import nl.avans.rentmycar.auth.data.networking.dto.register.RegisterRequest
 import nl.avans.rentmycar.auth.data.networking.dto.register.RegisterResponse
-import nl.avans.rentmycar.auth.data.networking.mappers.toUuid
 import nl.avans.rentmycar.auth.domain.IAuthDataSource
 import nl.avans.rentmycar.auth.domain.login.UserSession
 import nl.avans.rentmycar.core.data.networking.constructUrl
@@ -16,7 +15,6 @@ import nl.avans.rentmycar.core.data.networking.safeCall
 import nl.avans.rentmycar.core.domain.util.Error
 import nl.avans.rentmycar.core.domain.util.Result
 import nl.avans.rentmycar.core.domain.util.map
-import java.util.UUID
 
 class RemoteAuthDataSource(
     private val httpClient: HttpClient
@@ -42,10 +40,10 @@ class RemoteAuthDataSource(
         dateOfBirth: LocalDate,
         emailAddress: String,
         password: String
-    ): Result<UUID, Error> {
+    ): Result<String, Error> {
         return safeCall<RegisterResponse> {
             httpClient.post(
-                urlString = constructUrl("/auth/login")
+                urlString = constructUrl("/auth/register")
             ) {
                 setBody(
                     RegisterRequest(
@@ -58,7 +56,7 @@ class RemoteAuthDataSource(
                 )
             }
         }.map { response ->
-            response.toUuid()
+            response.userId
         }
     }
 

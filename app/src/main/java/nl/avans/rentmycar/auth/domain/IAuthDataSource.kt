@@ -4,7 +4,6 @@ import kotlinx.datetime.LocalDate
 import nl.avans.rentmycar.auth.domain.login.UserSession
 import nl.avans.rentmycar.core.domain.util.Error
 import nl.avans.rentmycar.core.domain.util.Result
-import java.util.UUID
 
 interface IAuthDataSource {
     suspend fun login(emailAddress: String, password: String): Result<UserSession, Error>
@@ -14,5 +13,5 @@ interface IAuthDataSource {
         dateOfBirth: LocalDate,
         emailAddress: String,
         password: String
-    ): Result<UUID, Error>
+    ): Result<String, Error>
 }
