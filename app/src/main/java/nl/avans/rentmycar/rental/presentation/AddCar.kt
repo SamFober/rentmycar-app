@@ -37,6 +37,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import android.Manifest
+import android.content.ContentValues
+import android.content.Context
+import android.os.Environment
+import android.provider.MediaStore
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -55,25 +59,53 @@ fun AddCar() {
             )
         }
     ) { paddingValues ->
-        val context = LocalContext.current
         var brand by remember { mutableStateOf(TextFieldValue("")) }
         var model by remember { mutableStateOf(TextFieldValue("")) }
         var availability by remember { mutableStateOf(false) }
         var location by remember { mutableStateOf(TextFieldValue("")) }
         var price by remember { mutableStateOf(TextFieldValue("")) }
-        var carImage by remember { mutableStateOf<Bitmap?>(null) }
-        val lifecycleOwner = LocalContext.current as LifecycleOwner
-        val cameraExecutor: ExecutorService = remember { Executors.newSingleThreadExecutor() }
-        var imageCapture: ImageCapture? by remember { mutableStateOf(null) }
-        val cameraPermission = Manifest.permission.CAMERA
 
-        val permissionLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission()
-        ) { isGranted ->
-            if (isGranted) {
-            } else {
-                Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
+        // State for captured image
+        var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
+        var capturedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+
+        // Context
+        val context = LocalContext.current
+
+
+        // Helper function to get Bitmap from URI
+        fun getBitmapFromUri(context: Context, uri: Uri): Bitmap? {
+            return try {
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    BitmapFactory.decodeStream(inputStream)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
             }
+        }
+
+        // Define the cameraLauncher to launch the camera intent
+        val cameraLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.TakePicture()
+        ) { isSuccess: Boolean ->
+            if (isSuccess) {
+                capturedImageUri?.let {
+                    // Load the bitmap from the captured image URI
+                    capturedImageBitmap = getBitmapFromUri(context, it)
+                }
+            }
+        }
+
+        // Function to create an image URI
+        fun createImageUri(): Uri {
+            val contentResolver = context.contentResolver
+            val values = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, "image_${System.currentTimeMillis()}.jpg")
+                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)  // Save to Pictures
+            }
+            return contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)!!
         }
 
     Column(
@@ -148,30 +180,12 @@ fun AddCar() {
 
         Button(
             onClick = {
-                if (ContextCompat.checkSelfPermission(context, cameraPermission) == PackageManager.PERMISSION_GRANTED) {
-                    startCamera(
-                        lifecycleOwner = lifecycleOwner,
-                        onImageCapture = { uri ->
-                            carImage = BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri))
-                        },
-                        onError = { Log.e("CameraX", "Failed to capture image: ${it.message}") }
-                    )
-                } else {
-                    permissionLauncher.launch(cameraPermission)
-                }
+                val uri = createImageUri()  // Create the image URI
+                capturedImageUri = uri
+                cameraLauncher.launch(uri)
             }
         ) {
             Text("Take Picture")
-        }
-
-        carImage?.let {
-            Image(
-                bitmap = it.asImageBitmap(),
-                contentDescription = "Car Image",
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(8.dp)
-            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -184,6 +198,8 @@ fun AddCar() {
     }
 }
 }
+
+
 
 @Composable
 fun DropDownDemo() {
@@ -245,48 +261,4 @@ fun DropDownDemo() {
     }
 }
 
-fun startCamera(
-    lifecycleOwner: LifecycleOwner,
-    onImageCapture: (Uri) -> Unit,
-    onError: (Exception) -> Unit
-) {
-    val cameraProviderFuture = ProcessCameraProvider.getInstance(lifecycleOwner as android.content.Context)
-    cameraProviderFuture.addListener({
-        val cameraProvider = cameraProviderFuture.get()
-        val preview = Preview.Builder().build().also {
-            it.setSurfaceProvider(PreviewView(lifecycleOwner).surfaceProvider)
-        }
-
-        val imageCapture = ImageCapture.Builder().build()
-
-        try {
-            cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(
-                lifecycleOwner,
-                CameraSelector.DEFAULT_BACK_CAMERA,
-                preview,
-                imageCapture
-            )
-
-            // Capture logic (for example, a button trigger to take a photo)
-            val photoFile = File(lifecycleOwner.filesDir, "photo.jpg")
-            val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-            imageCapture.takePicture(
-                outputOptions,
-                ContextCompat.getMainExecutor(lifecycleOwner as android.content.Context),
-                object : ImageCapture.OnImageSavedCallback {
-                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                        output.savedUri?.let(onImageCapture)
-                    }
-
-                    override fun onError(exception: ImageCaptureException) {
-                        onError(exception)
-                    }
-                }
-            )
-        } catch (exc: Exception) {
-            onError(exc)
-        }
-    }, ContextCompat.getMainExecutor(lifecycleOwner as android.content.Context))
-}
 
