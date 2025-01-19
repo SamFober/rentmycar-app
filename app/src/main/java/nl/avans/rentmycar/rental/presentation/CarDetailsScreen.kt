@@ -1,6 +1,5 @@
 package nl.avans.rentmycar.rental.presentation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,21 +15,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import nl.avans.rentmycar.R
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun CarDetailsScreen(
-    carId: Int,
+    carId: String,
     name: String,
     description: String,
-    image: Int,
-    onRentButtonClick: () -> Unit
+    imgUrl: String,
+    onRentButtonClick: (carId: String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -54,15 +55,20 @@ fun CarDetailsScreen(
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.primary
             )
-            Image(
-                painter = painterResource(id = image),
-                contentDescription = null,
+            GlideImage(
+                model = imgUrl,
+                contentDescription = "Car image",
+                loading = placeholder(R.drawable.logo),
+                failure = placeholder(R.drawable.logo),
                 modifier = Modifier
                     .size(400.dp)
                     .padding(8.dp),
                 contentScale = ContentScale.Fit
             )
-            Column(modifier = Modifier.padding(start = 8.dp)) {
+            Column(
+                modifier = Modifier.padding(start = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = name,
                     style = MaterialTheme.typography.headlineMedium,
@@ -75,7 +81,7 @@ fun CarDetailsScreen(
             }
             Column() {
                 Button(onClick = {
-                    onRentButtonClick()
+                    onRentButtonClick(carId)
                 }
                 ) {
                     Text(text = "Huren")
@@ -90,10 +96,10 @@ fun CarDetailsScreen(
 private fun CarDetailsScreenPreview() {
     RentMyCarTheme {
         CarDetailsScreen(
-            carId = 1,
+            carId = "",
             name = "Ford Ka",
             description = "Mooi koekblik",
-            image = R.drawable.logo,
+            imgUrl = "",
             onRentButtonClick = {}
         )
     }

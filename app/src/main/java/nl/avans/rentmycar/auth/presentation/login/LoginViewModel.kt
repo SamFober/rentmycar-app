@@ -4,10 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import nl.avans.rentmycar.auth.domain.IAuthDataSource
+import nl.avans.rentmycar.auth.data.IAuthDataSource
 import nl.avans.rentmycar.auth.domain.ITokenManager
 import nl.avans.rentmycar.auth.domain.login.LoginError
 import nl.avans.rentmycar.core.domain.util.NetworkError
@@ -20,6 +23,12 @@ class LoginViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(LoginUiState())
     val state = _state
+        .onStart { isLoggedIn() }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000L),
+            LoginUiState()
+        )
 
     private val _loginEventsChannel = Channel<LoginEvent>()
     val loginEvents = _loginEventsChannel.receiveAsFlow()
@@ -76,6 +85,16 @@ class LoginViewModel(
                         _loginEventsChannel.send(LoginEvent.Failed(error))
                     }
                 }
+        }
+    }
+
+    private fun isLoggedIn() {
+        viewModelScope.launch {
+            if (!tokenManager.getAccessToken().isEmpty()) {
+                _loginEventsChannel.send(LoginEvent.Success)
+            } else {
+                return@launch
+            }
         }
     }
 }

@@ -14,7 +14,9 @@ import androidx.compose.ui.Modifier
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RentMyCarAppScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateToRentalOffers: () -> Unit,
+    onNavigateToRentalBookings: () -> Unit
 ) {
     Scaffold(
         topBar = {

@@ -4,22 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
-import nl.avans.rentmycar.DetailScreen
-import nl.avans.rentmycar.RentalScreen
-import nl.avans.rentmycar.auth.domain.TokenManager
 import nl.avans.rentmycar.auth.presentation.login.LoginScreenRoute
 import nl.avans.rentmycar.auth.presentation.register.RegisterScreenRoute
 import nl.avans.rentmycar.rental.presentation.CarDetailsScreen
-import nl.avans.rentmycar.rental.presentation.book.RentalScreen
+import nl.avans.rentmycar.rental.presentation.booking.BookRentalScreenRoute
+import nl.avans.rentmycar.rental.presentation.offer.RentalOfferListScreenRoute
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
-import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,24 +23,21 @@ class MainActivity : ComponentActivity() {
         setContent {
             RentMyCarTheme {
                 val navController = rememberNavController()
-                val tokenManager = koinInject<TokenManager>()
-                var startScreen: Any = MainScreen
-
-                LaunchedEffect(key1 = null) {
-                    if (tokenManager.getAccessToken().isEmpty()) {
-                        startScreen = LoginScreen
-                    }
-                }
-
-
 
                 NavHost(
                     navController = navController,
-                    startDestination = startScreen
+                    startDestination = LoginScreen
                 ) {
                     composable<LoginScreen> {
                         LoginScreenRoute(
-                            onRegisterButtonClicked = { navController.navigate(RegisterScreen) }
+                            onRegisterButtonClicked = { navController.navigate(RegisterScreen) },
+                            onUserLoggedIn = {
+                                navController.navigate(MainScreen) {
+                                    popUpTo(LoginScreen) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
                         )
                     }
                     composable<RegisterScreen> {
@@ -56,22 +48,40 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable<MainScreen> {
-                        Text("MAIN SCREEN")
+                        RentalOfferListScreenRoute(
+                            onDetailButtonPressed = { carId, name, description, imgUrl ->
+                                navController.navigate(
+                                    DetailScreen(
+                                        carId = carId.toString(),
+                                        name = name,
+                                        description = description,
+                                        imgUrl = imgUrl
+                                    )
+                                )
+                            }
+                        )
                     }
                     composable<DetailScreen> {
                         val args = it.toRoute<DetailScreen>()
                         CarDetailsScreen(
-                            carId = args.carId,
+                            carId = args.carId.toString(),
                             name = args.name,
                             description = args.description,
-                            image = args.picture,
+                            imgUrl = args.imgUrl,
                             onRentButtonClick = {
-                                navController.navigate(RentalScreen)
+                                navController.navigate(BookRentalScreen(it.toString()))
                             }
                         )
                     }
-                    composable<RentalScreen> {
-                        RentalScreen()
+                    composable<BookRentalScreen> {
+                        BookRentalScreenRoute(
+                            onBookingAdded = {
+                                navController.popBackStack(MainScreen, inclusive = false)
+                            }
+                        )
+                    }
+                    composable<BookingListScreen> {
+
                     }
                 }
             }
@@ -86,6 +96,9 @@ object LoginScreen
 object RegisterScreen
 
 @Serializable
+object BookingListScreen
+
+@Serializable
 object MainScreen
 
 @Serializable
@@ -93,11 +106,13 @@ object StartScreen
 
 @Serializable
 data class DetailScreen(
-    val carId: Int,
+    val carId: String,
     val name: String,
     val description: String,
-    val picture: Int
+    val imgUrl: String
 )
 
 @Serializable
-object RentalScreen
+data class BookRentalScreen(
+    val offerId: String
+)

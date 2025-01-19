@@ -1,12 +1,11 @@
 package nl.avans.rentmycar.rental.presentation.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -16,26 +15,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import nl.avans.rentmycar.R
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
+import java.util.UUID
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun RentalCard(
     name: String,
     description: String,
-    image: Int,
-    carId: Int,
+    imgUrl: String,
+    offerId: UUID,
     onDetailButtonPressed: (
-        carId: Int,
+        carId: UUID,
         name: String,
         description: String,
-        imgRes: Int) -> Unit
+        imgUrl: String
+    ) -> Unit
 ) {
-    val navController = rememberNavController()
     Card(
         modifier = Modifier
             .padding(10.dp)
@@ -52,9 +54,11 @@ fun RentalCard(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = image),
-                contentDescription = "Car Image",
+            GlideImage(
+                model = imgUrl,
+                contentDescription = "Car image",
+                loading = placeholder(R.drawable.logo),
+                failure = placeholder(R.drawable.logo),
                 modifier = Modifier
                     .size(130.dp)
                     .padding(8.dp),
@@ -71,7 +75,7 @@ fun RentalCard(
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Button(onClick = {
-                    onDetailButtonPressed(carId, name, description, image)
+                    onDetailButtonPressed(offerId, name, description, imgUrl)
                 }
                 ) {
                     Text(text = "Details")
@@ -88,9 +92,9 @@ private fun RentalCardPreview() {
         RentalCard(
             name = "Ford Ka",
             description = "Mooi koekblik",
-            image = R.drawable.logo,
-            carId = 1,
-            onDetailButtonPressed = { carId, name, description, imgRes ->  }
+            imgUrl = "https://abstoragev4.blob.core.windows.net/auctions/43258/large/43258-1a_ex.JPG",
+            offerId = UUID.randomUUID(),
+            onDetailButtonPressed = { carId, name, description, imgRes -> }
         )
     }
 }

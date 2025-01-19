@@ -1,5 +1,6 @@
-package nl.avans.rentmycar.rental.presentation.book
+package nl.avans.rentmycar.rental.presentation.booking
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,27 +15,81 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toJavaLocalTime
+import kotlinx.datetime.todayIn
+import nl.avans.rentmycar.core.presentation.util.ObserveAsEvents
+import nl.avans.rentmycar.rental.presentation.util.toFormattedString
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import org.koin.androidx.compose.koinViewModel
+
+@Composable
+fun BookRentalScreenRoute(
+    viewModel: BookRentalViewModel = koinViewModel(),
+    onBookingAdded: () -> Unit
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+
+    ObserveAsEvents(events = viewModel.events) { event ->
+        when (event) {
+            is RentalBookingEvent.Success -> {
+                Toast.makeText(
+                    context,
+                    "Boeking geplaatst",
+                    Toast.LENGTH_LONG
+                ).show()
+                onBookingAdded()
+            }
+
+            is RentalBookingEvent.Error -> {
+                Toast.makeText(
+                    context,
+                    event.error.toString(),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    BookRentalScreen(
+        uiState = state,
+        onDateChanged = {
+            viewModel.bookingDateChanged(it)
+        },
+        onTimeChanged = {
+            viewModel.updateBookingTime(it)
+        },
+        onSubmit = {
+            viewModel.makeBooking()
+        }
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RentalScreen() {
+fun BookRentalScreen(
+    uiState: BookRentalUiState,
+    onDateChanged: (LocalDate) -> Unit,
+    onTimeChanged: (LocalTime) -> Unit,
+    onSubmit: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -45,26 +100,6 @@ fun RentalScreen() {
             )
         }
     ) { paddingValues ->
-        var pickedDate by remember {
-            mutableStateOf(LocalDate.now())
-        }
-        var pickedTime by remember {
-            mutableStateOf(LocalTime.NOON)
-        }
-        val formattedDate by remember {
-            derivedStateOf {
-                DateTimeFormatter
-                    .ofPattern("dd MMM yyyy")
-                    .format(pickedDate)
-            }
-        }
-        val formattedTime by remember {
-            derivedStateOf {
-                DateTimeFormatter
-                    .ofPattern("hh:mm")
-                    .format(pickedTime)
-            }
-        }
         val dateDialogState = rememberMaterialDialogState()
         val timeDialogState = rememberMaterialDialogState()
         Column(
@@ -92,7 +127,7 @@ fun RentalScreen() {
                     }) {
                         Text(text = "Kies een datum")
                     }
-                    Text(text = formattedDate)
+                    Text(text = uiState.bookingDate.toFormattedString())
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Column {
@@ -101,7 +136,7 @@ fun RentalScreen() {
                     }) {
                         Text(text = "Kies een tijd")
                     }
-                    Text(text = formattedTime)
+                    Text(text = uiState.bookingTime.toFormattedString())
                 }
             }
             Spacer(
@@ -109,7 +144,7 @@ fun RentalScreen() {
             )
             Text(text = "klik hier om de auto te huren:")
             Button(onClick = {
-                TODO("Koppelen aan de back-end, dankje Sam! xx <3")
+                onSubmit()
             }
             ) {
                 Text(text = "Huren")
@@ -123,10 +158,10 @@ fun RentalScreen() {
             }
         ) {
             datepicker(
-                initialDate = LocalDate.now(),
+                initialDate = uiState.bookingDate.toJavaLocalDate(),
                 title = "Kies een datum"
             ) {
-                pickedDate = it
+                onDateChanged(LocalDate(it.year, it.month, it.dayOfMonth))
             }
         }
         MaterialDialog(
@@ -137,10 +172,10 @@ fun RentalScreen() {
             }
         ) {
             timepicker(
-                initialTime = LocalTime.NOON,
+                initialTime = uiState.bookingTime.toJavaLocalTime(),
                 title = "Kies een tijd"
             ) {
-                pickedTime = it
+                onTimeChanged(LocalTime(it.hour, it.minute))
             }
         }
     }
@@ -150,6 +185,14 @@ fun RentalScreen() {
 @Composable
 private fun RentalScreenPreview() {
     RentMyCarTheme {
-        RentalScreen()
+        BookRentalScreen(
+            uiState = BookRentalUiState(
+                bookingDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
+                bookingTime = LocalTime(12, 0)
+            ),
+            onDateChanged = {},
+            onTimeChanged = {},
+            onSubmit = {}
+        )
     }
 }

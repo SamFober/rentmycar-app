@@ -4,11 +4,11 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import kotlinx.datetime.LocalDate
+import nl.avans.rentmycar.auth.data.IAuthDataSource
 import nl.avans.rentmycar.auth.data.networking.dto.login.LoginRequest
 import nl.avans.rentmycar.auth.data.networking.dto.login.LoginResponse
 import nl.avans.rentmycar.auth.data.networking.dto.register.RegisterRequest
 import nl.avans.rentmycar.auth.data.networking.dto.register.RegisterResponse
-import nl.avans.rentmycar.auth.domain.IAuthDataSource
 import nl.avans.rentmycar.auth.domain.login.UserSession
 import nl.avans.rentmycar.core.data.networking.constructUrl
 import nl.avans.rentmycar.core.data.networking.safeCall
