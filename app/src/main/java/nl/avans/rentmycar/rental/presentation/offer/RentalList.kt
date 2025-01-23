@@ -1,7 +1,7 @@
 package nl.avans.rentmycar.rental.presentation.offer
 
-import nl.avans.rentmycar.rental.domain.Car
-import nl.avans.rentmycar.rental.domain.CarType
+import nl.avans.rentmycar.car.domain.Car
+import nl.avans.rentmycar.car.domain.CarType
 import nl.avans.rentmycar.rental.domain.Location
 import nl.avans.rentmycar.rental.domain.RentalOffer
 import java.util.UUID
