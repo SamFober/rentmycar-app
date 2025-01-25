@@ -1,48 +1,79 @@
 package nl.avans.rentmycar.ui.review.components
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import nl.avans.rentmycar.ui.review.models.Review
+
+
 
 @Composable
 fun ReviewListScreen(
     carId: String,
     reviews: List<Review>
 ) {
-    // Filter reviews by carId
-    val carReviews = reviews.filter { it.carId == carId }
+    // State for sorting option
+    var sortOption by remember { mutableStateOf("Newest") }
+
+    // Sort reviews based on the selected option
+    val sortedReviews = when (sortOption) {
+        "Newest" -> reviews.sortedByDescending { it.timestamp }
+        "Oldest" -> reviews.sortedBy { it.timestamp }
+        "Highest Rating" -> reviews.sortedByDescending { it.rating }
+        else ->reviews
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // Title card
-        Text(
-            text = "Reviews",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(16.dp)
+        // Dropdown menu for sorting options
+        SortDropdownMenu(
+            selectedOption = sortOption,
+            onSortOptionChange = { sortOption = it }
         )
 
-        if (carReviews.isEmpty()) {
-            // Show a message if no reviews are available
+        // Review list
+        if (sortedReviews.isEmpty()) {
             Text(
                 text = "No reviews available.",
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(vertical = 16.dp)
+                modifier = Modifier.padding(16.dp)
             )
         } else {
-            // Display the list of reviews
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(carReviews.size) { review ->
-                    ReviewCard(review = carReviews[review])
+            LazyColumn(
+                modifier =Modifier
+                    .fillMaxSize()
+                    .animateContentSize()
+            ) {
+                items(sortedReviews.size) { review ->
+                    ReviewCard(review = sortedReviews[review])
                 }
             }
         }
@@ -50,29 +81,87 @@ fun ReviewListScreen(
 }
 
 @Composable
-fun ReviewCard(review: Review) {
-    // Implement the UI for a single review card
+fun SortDropdownMenu(
+    selectedOption: String,
+    onSortOptionChange: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val options = listOf("Newest", "Oldest", "Highest Rating")
+
+    Box(modifier = Modifier.padding(16.dp)) {
+        // Dropdown button
+        Button(onClick = { expanded = true }) {
+            Text(text = selectedOption)
+        }
+
+        // Dropdown menu
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            options.forEach { option ->
+                DropdownMenuItem(
+                    onClick = {
+                        onSortOptionChange(option)
+                        expanded = false
+                    },
+                    text = {
+                        Text(
+                            text = option,
+                            style = if (option == selectedOption) MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold
+                            ) else MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ReviewCard(
+    review: Review
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            .padding(8.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "By: ${review.userName}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
             // Display review details
             Text(
-                text = "${review.rating}★",
+                text = "${review.rating} ★",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp),
+                color = MaterialTheme.colorScheme.primary
             )
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
+
             Text(
                 text = review.comment,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
-            )
-            Text(
-                text = "By ${review.userName}",
-                style = MaterialTheme.typography.bodySmall,
             )
             Text(
                 text = "Date: ${review.timestamp}",
@@ -80,27 +169,4 @@ fun ReviewCard(review: Review) {
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ReviewListScreenPreview() {
-    val sampleReviews = listOf(
-        Review(
-            carId = "car123",
-            userName = "John Doe",
-            rating = 5,
-            comment = "Great car, very clean and smooth ride!",
-            timestamp = "2025-01-24T15:30:00"
-        ),
-        Review(
-            carId = "car123",
-            userName = "Jane Smith",
-            rating = 4,
-            comment = "Good car, but the fuel tank was half empty.",
-            timestamp = "2025-01-23T10:15:00"
-        )
-    )
-
-    ReviewListScreen(carId = "car123", reviews = sampleReviews)
 }

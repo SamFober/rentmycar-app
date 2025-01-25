@@ -45,6 +45,20 @@ fun ReviewFeature(
                 rating = 4,
                 comment = "Good experience, but the tank was half full.",
                 timestamp = "2025-01-23T18:00:00"
+            ),
+            Review(
+                carId = carId,
+                userName = "Bob Johnson",
+                rating = 3,
+                comment = "Average car, could be better.",
+                timestamp = "2025-01-22T14:30:00"
+            ),
+            Review(
+                carId = carId,
+                userName = "Alice Brown",
+                rating = 5,
+                comment = "Highly recommended! The car exceeded my expectations.",
+                timestamp = "2025-01-21T09:45:00"
             )
         )
     }
