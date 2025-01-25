@@ -1,5 +1,8 @@
 package nl.avans.rentmycar.ui.review
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -96,20 +99,26 @@ fun ReviewFeature(
             if (isLoading) {
                 LoadingIndicator()
             } else {
-                Column(modifier = Modifier.padding(paddingValues)) {
-                    // Review Form: Add a new review
-                    ReviewForm(
-                        carId = carId,
-                        onReviewSubmit = { review ->
-                            reviews.add(review) // Add new review to the list
-                        }
-                    )
+                AnimatedVisibility(
+                    visible = !isLoading,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Column(modifier = Modifier.padding(paddingValues)) {
+                        // Review Form: Add a new review
+                        ReviewForm(
+                            carId = carId,
+                            onReviewSubmit = { review ->
+                                reviews.add(review) // Add new review to the list
+                            }
+                        )
 
-                    // Divider between the form and the review list
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                        // Divider between the form and the review list
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                    // Review List: Display all reviews for the current car
-                    ReviewListScreen(carId = carId, reviews = reviews)
+                        // Review List: Display all reviews for the current car
+                        ReviewListScreen(carId = carId, reviews = reviews)
+                    }
                 }
             }
         }
