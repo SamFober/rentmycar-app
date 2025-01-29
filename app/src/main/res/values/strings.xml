@@ -15,4 +15,11 @@
     <string name="last_name_field">Last name</string>
     <string name="register">Register</string>
     <string name="account_created">Account created successfully!\nYou can now sign in.</string>
+    <string name="rent_car">Rent car</string>
+    <string name="choose_date">Pick a date</string>
+    <string name="choose_time">Pick a time</string>
+    <string name="click_car_rent">Click here to rent the car:</string>
+    <string name="rent">Rent</string>
+    <string name="car_details">Car details</string>
+    <string name="description">Description:</string>
 </resources>

@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,6 +34,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalTime
 import kotlinx.datetime.todayIn
+import nl.avans.rentmycar.R
 import nl.avans.rentmycar.core.presentation.util.ObserveAsEvents
 import nl.avans.rentmycar.rental.presentation.util.toFormattedString
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
@@ -110,7 +112,7 @@ fun BookRentalScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Auto huren",
+                text = stringResource(id = R.string.rent_car),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -125,7 +127,7 @@ fun BookRentalScreen(
                     Button(onClick = {
                         dateDialogState.show()
                     }) {
-                        Text(text = "Kies een datum")
+                        Text(text = stringResource(id = R.string.choose_date))
                     }
                     Text(text = uiState.bookingDate.toFormattedString())
                 }
@@ -134,7 +136,7 @@ fun BookRentalScreen(
                     Button(onClick = {
                         timeDialogState.show()
                     }) {
-                        Text(text = "Kies een tijd")
+                        Text(text = stringResource(id = R.string.choose_time))
                     }
                     Text(text = uiState.bookingTime.toFormattedString())
                 }
@@ -142,12 +144,12 @@ fun BookRentalScreen(
             Spacer(
                 modifier = Modifier.height(20.dp)
             )
-            Text(text = "klik hier om de auto te huren:")
+            Text(text = stringResource(id = R.string.click_car_rent))
             Button(onClick = {
                 onSubmit()
             }
             ) {
-                Text(text = "Huren")
+                Text(text = stringResource(id = R.string.rent))
             }
         }
         MaterialDialog(
@@ -159,7 +161,7 @@ fun BookRentalScreen(
         ) {
             datepicker(
                 initialDate = uiState.bookingDate.toJavaLocalDate(),
-                title = "Kies een datum"
+                title = stringResource(id = R.string.choose_date)
             ) {
                 onDateChanged(LocalDate(it.year, it.month, it.dayOfMonth))
             }
@@ -173,7 +175,7 @@ fun BookRentalScreen(
         ) {
             timepicker(
                 initialTime = uiState.bookingTime.toJavaLocalTime(),
-                title = "Kies een tijd"
+                title = stringResource(id = R.string.choose_time)
             ) {
                 onTimeChanged(LocalTime(it.hour, it.minute))
             }

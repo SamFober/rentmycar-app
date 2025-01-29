@@ -16,4 +16,11 @@
     <string name="last_name_field">Achternaam</string>
     <string name="register">Registreren</string>
     <string name="account_created">Account is succesvol aangemaakt!\n Je kan nu inloggen</string>
+    <string name="rent_car">Auto huren</string>
+    <string name="choose_date">Kies een datum</string>
+    <string name="choose_time">Kies een tijd</string>
+    <string name="click_car_rent">klik hier om de auto te huren:</string>
+    <string name="rent">Huren</string>
+    <string name="car_details">Auto details</string>
+    <string name="description">Beschrijving:</string>
 </resources>

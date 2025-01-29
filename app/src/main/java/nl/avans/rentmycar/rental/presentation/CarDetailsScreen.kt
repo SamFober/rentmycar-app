@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -51,7 +52,7 @@ fun CarDetailsScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Auto Details",
+                text = stringResource(id = R.string.car_details),
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -75,7 +76,7 @@ fun CarDetailsScreen(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "Beschrijving: $description",
+                    text = stringResource(id = R.string.description, description),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
@@ -84,7 +85,7 @@ fun CarDetailsScreen(
                     onRentButtonClick(carId)
                 }
                 ) {
-                    Text(text = "Huren")
+                    Text(text = stringResource(id = R.string.rent))
                 }
             }
         }
