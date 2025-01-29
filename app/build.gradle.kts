@@ -45,6 +45,7 @@ android {
     }
 }
 
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -64,6 +65,7 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.bundles.koin)
+    implementation(libs.androidx.ui.test.junit4.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

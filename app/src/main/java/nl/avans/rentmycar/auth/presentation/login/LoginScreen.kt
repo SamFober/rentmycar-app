@@ -31,6 +31,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -151,6 +152,7 @@ fun LoginScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
+                .testTag("emailField")
                 .focusRequester(focusRequester),
             singleLine = true,
             label = {
@@ -176,14 +178,14 @@ fun LoginScreen(
             onPasswordVisibilityChanged = {
                 onPasswordVisibilityChange(it)
             },
-            enabled = !uiState.isLoading
-        )
+            enabled = !uiState.isLoading)
         Spacer(modifier = Modifier.height(20.dp))
         if (uiState.isLoading) {
             CircularProgressIndicator()
         } else {
             Button(
-                onClick = { onSubmitButtonClicked() }
+                onClick = { onSubmitButtonClicked() },
+                modifier = Modifier.testTag("signInButton")
             ) {
                 Text(stringResource(R.string.login))
             }
