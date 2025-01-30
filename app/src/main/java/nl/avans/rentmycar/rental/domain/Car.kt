@@ -1,4 +1,4 @@
-package nl.avans.rentmycar.car.domain
+package nl.avans.rentmycar.rental.domain
 
 import java.util.UUID
 

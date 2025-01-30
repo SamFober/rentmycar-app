@@ -1,6 +1,5 @@
 package nl.avans.rentmycar.rental.domain
 
-import nl.avans.rentmycar.car.domain.Car
 import java.util.UUID
 
 data class RentalOffer(

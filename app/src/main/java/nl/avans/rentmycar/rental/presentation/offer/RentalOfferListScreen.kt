@@ -1,11 +1,15 @@
 package nl.avans.rentmycar.rental.presentation.offer
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -25,12 +29,16 @@ fun RentalOfferListScreenRoute(
         name: String,
         description: String,
         imgRes: String
-    ) -> Unit
+    ) -> Unit,
+    onCarButtonPressed: () -> Unit,
+    onReviewButtonPressed: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     RentalOfferListScreen(
         uiState = state,
-        onDetailButtonPressed = onDetailButtonPressed
+        onDetailButtonPressed = onDetailButtonPressed,
+        onCarButtonPressed = onCarButtonPressed,
+        onReviewButtonPressed = onReviewButtonPressed
     )
 }
 
@@ -43,22 +51,45 @@ fun RentalOfferListScreen(
         name: String,
         description: String,
         imgRes: String
-    ) -> Unit
+    ) -> Unit,
+    onCarButtonPressed: () -> Unit,
+    onReviewButtonPressed: () -> Unit
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(5.dp),
-        contentPadding = PaddingValues(16.dp)
-    ) {
-        items(uiState.rentalOffers) {
-            RentalCard(
-                name = "${it.car.brand} ${it.car.model}",
-                description = "${it.car.seatCount} zitplaatsen",
-                imgUrl = it.car.images[0],
-                offerId = it.id,
-                onDetailButtonPressed = onDetailButtonPressed
-            )
+    Column {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(5.dp),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            items(uiState.rentalOffers) {
+                RentalCard(
+                    name = "${it.car.brand} ${it.car.model}",
+                    description = "${it.car.seatCount} zitplaatsen",
+                    imgUrl = it.car.images[0],
+                    offerId = it.id,
+                    onDetailButtonPressed = onDetailButtonPressed
+                )
+            }
+        }
+        Row(
+            modifier = Modifier
+                .padding(5.dp),
+        ) {
+            Button(
+                onClick = {
+                    onCarButtonPressed()
+                }
+            ) {
+                Text("Car")
+            }
+            Button(
+                onClick = {
+                    onReviewButtonPressed()
+                }
+            ) {
+                Text("Review")
+            }
         }
     }
 }
@@ -71,7 +102,9 @@ fun RentalOfferListScreenPreview() {
             uiState = RentalOfferListUiState(rentalOffers = rentalOfferLists),
             onDetailButtonPressed = { carId, name, description, imgRes ->
 
-            }
+            },
+            onCarButtonPressed = {},
+            onReviewButtonPressed = {}
         )
     }
 }

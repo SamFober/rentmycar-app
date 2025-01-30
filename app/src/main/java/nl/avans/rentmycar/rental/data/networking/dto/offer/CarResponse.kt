@@ -1,7 +1,7 @@
 package nl.avans.rentmycar.rental.data.networking.dto.offer
 
 import kotlinx.serialization.Serializable
-import nl.avans.rentmycar.car.domain.CarType
+import nl.avans.rentmycar.rental.domain.CarType
 
 @Serializable
 data class CarResponse(

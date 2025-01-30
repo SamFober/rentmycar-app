@@ -26,7 +26,7 @@ import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
-fun CarDetailsScreen(
+fun OfferDetailsScreen(
     carId: String,
     name: String,
     description: String,
@@ -95,7 +95,7 @@ fun CarDetailsScreen(
 @Composable
 private fun CarDetailsScreenPreview() {
     RentMyCarTheme {
-        CarDetailsScreen(
+        OfferDetailsScreen(
             carId = "",
             name = "Ford Ka",
             description = "Mooi koekblik",
