@@ -1,6 +1,14 @@
 package nl.avans.rentmycar.car.presentation
 
+import android.content.ContentValues
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,19 +26,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.text.input.TextFieldValue
-import nl.avans.rentmycar.R
-import android.graphics.BitmapFactory
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.platform.LocalContext
-import android.content.ContentValues
-import android.content.Context
-import android.os.Environment
-import android.provider.MediaStore
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import nl.avans.rentmycar.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,102 +83,105 @@ fun AddCar() {
             val values = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, "image_${System.currentTimeMillis()}.jpg")
                 put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)  // Save to Pictures
+                put(
+                    MediaStore.Images.Media.RELATIVE_PATH,
+                    Environment.DIRECTORY_PICTURES
+                )  // Save to Pictures
             }
             return contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)!!
         }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Add a New Car", style = MaterialTheme.typography.titleLarge)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextField(
-            value = brand,
-            onValueChange = { brand = it },
-            label = { Text("Car Brand") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            value = model,
-            onValueChange = { model = it },
-            label = { Text("Car Model") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            value = location,
-            onValueChange = { location = it },
-            label = { Text("Location") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            value = price,
-            onValueChange = { price = it },
-            label = { Text("Price") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Column( modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp),
-            horizontalAlignment = Alignment.Start
-        ){
-            Text("Car Type")
-        }
-
-        DropDownDemo()
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Available")
-            Checkbox(
-                checked = availability,
-                onCheckedChange = { availability = it }
+            Text("Add a New Car", style = MaterialTheme.typography.titleLarge)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextField(
+                value = brand,
+                onValueChange = { brand = it },
+                label = { Text("Car Brand") },
+                modifier = Modifier.fillMaxWidth()
             )
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Button(
-            onClick = {
-                val uri = createImageUri()  // Create the image URI
-                capturedImageUri = uri
-                cameraLauncher.launch(uri)
+            TextField(
+                value = model,
+                onValueChange = { model = it },
+                label = { Text("Car Model") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextField(
+                value = location,
+                onValueChange = { location = it },
+                label = { Text("Location") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextField(
+                value = price,
+                onValueChange = { price = it },
+                label = { Text("Price") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text("Car Type")
             }
-        ) {
-            Text("Take Picture")
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            DropDownDemo()
 
-        Button(
-            onClick = { /* Handle submit action */ }
-        ) {
-            Text("Submit")
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Available")
+                Checkbox(
+                    checked = availability,
+                    onCheckedChange = { availability = it }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    val uri = createImageUri()  // Create the image URI
+                    capturedImageUri = uri
+                    cameraLauncher.launch(uri)
+                }
+            ) {
+                Text("Take Picture")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { /* Handle submit action */ }
+            ) {
+                Text("Submit")
+            }
         }
     }
 }
-}
-
 
 
 @Composable

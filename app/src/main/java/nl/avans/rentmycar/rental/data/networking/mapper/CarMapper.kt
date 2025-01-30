@@ -1,7 +1,7 @@
 package nl.avans.rentmycar.rental.data.networking.mapper
 
-import nl.avans.rentmycar.rental.domain.Car
 import nl.avans.rentmycar.rental.data.networking.dto.offer.CarResponse
+import nl.avans.rentmycar.rental.domain.Car
 import java.util.UUID
 
 fun CarResponse.toCar(): Car {

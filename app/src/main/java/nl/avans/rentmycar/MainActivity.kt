@@ -22,6 +22,7 @@ import nl.avans.rentmycar.car.presentation.RentalList
 import nl.avans.rentmycar.rental.presentation.OfferDetailsScreen
 import nl.avans.rentmycar.rental.presentation.booking.BookRentalScreenRoute
 import nl.avans.rentmycar.rental.presentation.offer.RentalOfferListScreenRoute
+import nl.avans.rentmycar.review.presentation.ReviewScreen
 import nl.avans.rentmycar.ui.theme.RentMyCarTheme
 
 class MainActivity : ComponentActivity() {
@@ -70,7 +71,9 @@ class MainActivity : ComponentActivity() {
                             onCarButtonPressed = {
                                 navController.navigate(CarListScreen)
                             },
-                            onReviewButtonPressed = {}
+                            onReviewButtonPressed = {
+                                navController.navigate(ReviewScreen)
+                            }
                         )
                     }
                     composable<OfferDetailScreen> {
@@ -115,6 +118,14 @@ class MainActivity : ComponentActivity() {
                     composable("add_car") {
                         AddCar()
                     }
+                    composable<ReviewScreen> {
+                        ReviewScreen(
+                            carId = "",
+                            onNavigateBack = {
+                                navController.popBackStack()
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -134,7 +145,7 @@ object CarListScreen
 object MainScreen
 
 @Serializable
-object StartScreen
+object ReviewScreen
 
 @Serializable
 data class OfferDetailScreen(

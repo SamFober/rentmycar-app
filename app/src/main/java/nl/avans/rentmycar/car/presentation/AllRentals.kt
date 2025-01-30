@@ -27,7 +27,11 @@ import nl.avans.rentmycar.car.domain.Rental
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AllRentals(platlist: List<Rental>, onDetailButtonPressed: (Int) -> Unit, onAddCarButtonPressed: () -> Unit) {
+fun AllRentals(
+    platlist: List<Rental>,
+    onDetailButtonPressed: (Int) -> Unit,
+    onAddCarButtonPressed: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -57,7 +61,13 @@ fun AllRentals(platlist: List<Rental>, onDetailButtonPressed: (Int) -> Unit, onA
                 contentPadding = PaddingValues(16.dp)
             ) {
                 items(platlist) {
-                    MyCarCard(it.name, it.description, it.imageRes, it.id, onDetailButtonPressed = onDetailButtonPressed)
+                    MyCarCard(
+                        it.name,
+                        it.description,
+                        it.imageRes,
+                        it.id,
+                        onDetailButtonPressed = onDetailButtonPressed
+                    )
                 }
             }
         }
