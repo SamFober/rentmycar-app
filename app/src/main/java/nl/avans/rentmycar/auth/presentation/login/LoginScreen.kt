@@ -31,6 +31,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -137,7 +138,8 @@ fun LoginScreen(
             fontSize = 40.sp,
             fontWeight = FontWeight.Black,
             textAlign = TextAlign.Center,
-            color = contentColor
+            color = contentColor,
+            modifier = Modifier.testTag("login_title")
         )
         Spacer(modifier = Modifier.height(50.dp))
         TextField(
@@ -148,7 +150,8 @@ fun LoginScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .focusRequester(focusRequester),
+                .focusRequester(focusRequester)
+                .testTag("email_field"),
             singleLine = true,
             label = {
                 Text(text = stringResource(R.string.email_field))
@@ -173,21 +176,26 @@ fun LoginScreen(
             onPasswordVisibilityChanged = {
                 onPasswordVisibilityChange(it)
             },
-            enabled = !uiState.isLoading
+            enabled = !uiState.isLoading,
+            modifier = Modifier.testTag("password")
         )
         Spacer(modifier = Modifier.height(20.dp))
         if (uiState.isLoading) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(modifier = Modifier.testTag("loading_indicator"))
         } else {
             Button(
-                onClick = { onSubmitButtonClicked() }
+                onClick = { onSubmitButtonClicked() },
+                modifier = Modifier.testTag("login_button")
             ) {
                 Text(stringResource(R.string.login))
             }
-            Spacer(modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             TextButton(
-                onClick = { onRegisterButtonClicked() }
-            ) { Text(text = stringResource(R.string.prompt_register)) }
+                onClick = { onRegisterButtonClicked() },
+                modifier = Modifier.testTag("register_button")
+            ) {
+                Text(text = stringResource(R.string.prompt_register))
+            }
         }
     }
 }
